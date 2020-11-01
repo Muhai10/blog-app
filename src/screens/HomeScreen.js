@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   viewStyle: {
         flex: 1,
-    backgroundColor: '#152a38'
+      backgroundColor: '#483d8b'
   },
 });
 

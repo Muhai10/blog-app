@@ -33,14 +33,20 @@ const ProfileScreen = (props) => {
 
 
           <View>
-                      <Image source={require('../../assets/profile_pic.jpg')} style={styles.logoStyle} />
+                      {/*<Image source={require('../../assets/profile_pic.jpg')} style={styles.logoStyle} />*/}
+                      <Avatar
+                          containerStyle={{ backgroundColor: "#ffab91" }}
+                          rounded
+                          icon={{ name: "user", type: "font-awesome", color: "black" }}
+                          activeOpacity={1}
+                      />
                       <Text style={styles.textViewStyle2}>{auth.CurrentUser.name}</Text>
           </View>
 
           <View style={styles.textViewStyle}>
-            <Text style={styles.textStyle}>Born on: </Text>
-            <Text style={styles.textStyle}>Address: </Text>
-            <Text style={styles.lastTextStyle}>Works at: </Text>
+                      <Text style={styles.textStyle}>Born on: {auth.CurrentUser.dob} </Text>
+                      <Text style={styles.textStyle}>Address: {auth.CurrentUser.address} </Text>
+                      <Text style={styles.lastTextStyle}>Works at: {auth.CurrentUser.work} </Text>
                   </View>
                   <Button buttonStyle={{ backgroundColor: '#F4F6F7', marginTop: 40, width: 200, borderRadius: 10 }}
                       icon={<FontAwesome name="edit" size={24} color="black" />}

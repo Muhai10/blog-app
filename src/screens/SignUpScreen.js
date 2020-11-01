@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input, Button, Card } from 'react-native-elements';
-import { MaterialIcons, Feather, AntDesign} from '@expo/vector-icons';
-
-import {storage, storeData, storeDataJSON}  from "../functions/AsynchronousStorageFunctions";
+import { MaterialIcons, Feather, AntDesign, Entypo } from '@expo/vector-icons';
+import { storage, storeData, storeDataJSON } from "../functions/AsynchronousStorageFunctions";
+import ImagePickerExample  from "../functions/ImagePicker"
 
 const SignUpScreen = (props) => {
 
@@ -11,6 +11,12 @@ const SignUpScreen = (props) => {
     const [SID, setSID] = useState("");
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
+    const [DOB, setDOB] = useState("");
+    const [Address, setAddress] = useState("");
+    const [Work, setWork] = useState("");
+
+   
+
     return(
         <View style = {styles.viewStyle}>
             <Card containerStyle = {styles.cardViewStyle}>
@@ -47,6 +53,30 @@ const SignUpScreen = (props) => {
                     }}
                 />
 
+                <Input
+                    leftIcon={<MaterialIcons name="date-range" size={24} color="black" />}
+                    placeholder='Date Of Birth'
+                    onChangeText={function (currentInput) {
+                        setDOB(currentInput);
+                    }}
+                />
+
+                <Input
+                    leftIcon={<Feather name="map-pin" size={24} color="black" />}
+                    placeholder='Address'
+                    onChangeText={function (currentInput) {
+                        setAddress(currentInput);
+                    }}
+                />
+
+                <Input
+                    leftIcon={<Entypo name="briefcase" size={24} color="black" />}
+                    placeholder=' Works at..'
+                    onChangeText={function (currentInput) {
+                        setWork(currentInput);
+                    }}
+                />
+
                 <Button buttonStyle = {{backgroundColor: '#152a38'}}
                     icon = {<AntDesign name="user" size={24} color="#d1d4c9" />}
                     title = ' Sign Up!'
@@ -58,6 +88,9 @@ const SignUpScreen = (props) => {
                             sid: SID,
                             email: Email,
                             password: Password,
+                            dob: DOB,
+                            address: Address,
+                            work: Work,
                         };
                         storeDataJSON(Email, currentUser);
                         props.navigation.navigate("SignIn");
@@ -83,7 +116,7 @@ const styles = StyleSheet.create({
     viewStyle: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#556e53'
+        backgroundColor: '#483d8b'
 
     },
     cardViewStyle: {
