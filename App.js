@@ -1,99 +1,129 @@
-import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import {createMaterialBottomTabNavigator} from "@react-navigation/material-bottom-tabs"; 
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import {  AntDesign ,Ionicons ,Entypo } from "@expo/vector-icons";
+import SignInScreenActivity from './Source/screens/SignInScreen'
+import SignUpScreenActivity from './Source/screens/SignUpScreen'
+import HomeScreenActivity from './Source/screens/Home'
+import ProfileScreenActivity from './Source/screens/ProfileScreen'
+import NotificationScreenActivity from './Source/screens/NotificationScreen'
+import IndividualPostScreen from './Source/screens/IndividualPost'
+import { AuthContext, AuthProvider } from "./Source/provider/AuthProvider";
 
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-
-
-import HomeScreen from './src/screens/HomeScreen';
-import SignInScreen from './src/screens/SignInScreen';
-import SignUpScreen from './src/screens/SignUpScreen';
-import NotificationScreen from './src/screens/NotificationScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
-
-import {AuthContext, AuthProvider} from './src/providers/AuthProvider';
-import { color } from "react-native-reanimated";
-const HomeStack = createStackNavigator();
-const AuthStack = createStackNavigator();
+const AuthStack= createStackNavigator();
+const HomeStack =createStackNavigator();
 const HomeTab = createMaterialBottomTabNavigator();
 const AppDrawer = createDrawerNavigator();
-const CommentOnPostStack = createStackNavigator();
 
 const AppDrawerScreen = () => {
   return (
-      <AppDrawer.Navigator drawerStyle={{ backgroundColor:'#f0ffff'}}>
+    <AppDrawer.Navigator theme={MyTheme} initialRouteName="Home">
       <AppDrawer.Screen name="Home" component={HomeTabScreen} />
-      <AppDrawer.Screen name="Profile" component={ProfileScreen} />
+      <AppDrawer.Screen name="Profile" component={ProfileScreenActivity} />
     </AppDrawer.Navigator>
   );
 };
 
-const HomeStackScreen = () => {
-  return(
-    <HomeStack.Navigator initialRouteName = 'Home'>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-    </HomeStack.Navigator>
-  );
-
-};
-
 const HomeTabScreen = () => {
   return (
-      <HomeTab.Navigator initialRouteName="Home" barStyle={{ backgroundColor:'#5DADE2'}}>
-      <HomeTab.Screen 
+    <AuthContext.Consumer>
+        {(auth) => (
+    <HomeTab.Navigator initialRouteName="Home">
+      <HomeTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
+        
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <MaterialIcons name="home" size={26} color="white" />
+              <Entypo name="home" color="white" size={26} />
             ) : (
-              <MaterialCommunityIcons name="home-outline" size={26} color="white" />
+              <AntDesign name="home" color="white" size={22} />
             ),
         }}
       />
       <HomeTab.Screen
         name="Notification"
-        component={NotificationScreen}
+        children={()=><NotificationScreenActivity currentUser={auth.CurrentUser} />}
         options={{
           tabBarLabel: "Notifications",
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <MaterialIcons name="notifications" size={24} color="white" />
+              <Ionicons name="ios-notifications" size={26} color="white" />
             ) : (
-              <MaterialIcons name="notifications-none" size={24} color="white" />
+              <Ionicons
+                name="ios-notifications-outline"
+                size={22}
+                color="white"
+              />
             ),
         }}
       />
-      
     </HomeTab.Navigator>
+     )}
+     </AuthContext.Consumer>
   );
 };
+
+
+const HomeStackScreen=() =>{
+  return(
+    <HomeStack.Navigator initialRouteName="Home">
+      <HomeStack.Screen name="Home" component={HomeScreenActivity}  options={{ headerShown: false }}/>
+      <HomeStack.Screen name="IndivialPost" component={IndividualPostScreen}  options={{ headerShown: false }}/>
+    </HomeStack.Navigator>
+  )
+}
 
 const AuthStackScreen = () => {
-  return(
-    <AuthStack.Navigator initialRouteName = 'SignIn'>
-      <AuthStack.Screen name="SignIn" component={SignInScreen} options={{headerShown: false}} />
-      <AuthStack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}} />
+  return (
+    <AuthStack.Navigator initialRouteName="SignIn">
+      <AuthStack.Screen
+        name="SignIn"
+        component={SignInScreenActivity}
+        options={{ headerShown: false }}
+      />
+      <AuthStack.Screen
+        name="SignUp"
+        component={SignUpScreenActivity}
+        options={{ headerShown: false }}
+      />
     </AuthStack.Navigator>
   );
-
 };
 
-function App(){
-  return(
+const MyTheme ={
+  dark:true,
+  colors:{
+    primary: "#ffffff",
+      background: "#1273de",
+      card: "#064994",
+    text: "white",
+    border: "black",
+    notification:"blue",
+  },
+};
+
+export default function App() {
+
+  
+  
+  return (
+
     <AuthProvider>
       <AuthContext.Consumer>
         {(auth) => (
-          <NavigationContainer>
-            { auth.IsLoggedIn ? <AppDrawerScreen/> : <AuthStackScreen/>}
-          </NavigationContainer>)}
+          <NavigationContainer theme={MyTheme}>
+             {auth.IsLoggedIn ? <AppDrawerScreen /> : <AuthStackScreen />}
+          </NavigationContainer>
+        )}
       </AuthContext.Consumer>
     </AuthProvider>
+    
+    
+   
   );
-};
-
-export default App;
+}
